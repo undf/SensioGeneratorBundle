@@ -1,5 +1,5 @@
 {
-    "name": "sensio/generator-bundle",
+    "name": "undf/sensio-generator-bundle",
     "description": "This bundle generates code for you",
     "keywords": [],
     "type": "symfony-bundle",
@@ -8,6 +8,10 @@
         {
             "name": "Fabien Potencier",
             "email": "fabien@symfony.com"
+        },
+        {
+            "name": "Dani Gonzalez",
+            "email": "daniel.gonzalez@undefined.es"
         }
     ],
     "require": {
