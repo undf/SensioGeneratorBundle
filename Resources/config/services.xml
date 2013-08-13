@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <!-- Services used to format the label, default is undf.generator.label.strategy.underscore -->
+        <service id="undf.generator.label.strategy.bc" class="Sensio\Bundle\GeneratorBundle\Translator\BCLabelTranslatorStrategy" />
+        <service id="undf.generator.label.strategy.native" class="Sensio\Bundle\GeneratorBundle\Translator\NativeLabelTranslatorStrategy" />
+        <service id="undf.generator.label.strategy.noop" class="Sensio\Bundle\GeneratorBundle\Translator\NoopLabelTranslatorStrategy" />
+        <service id="undf.generator.label.strategy.underscore" class="Sensio\Bundle\GeneratorBundle\Translator\UnderscoreLabelTranslatorStrategy" />
+        <service id="undf.generator.label.strategy.form_component" class="Sensio\Bundle\GeneratorBundle\Translator\FormLabelTranslatorStrategy" />
+
+    </services>
+</container>

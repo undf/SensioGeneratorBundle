@@ -54,7 +54,7 @@ class Validators
         if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $bundle)) {
             throw new \InvalidArgumentException('The bundle name contains invalid characters.');
         }
-        
+
         if (!preg_match('/Bundle$/', $bundle)) {
             throw new \InvalidArgumentException('The bundle name must end with Bundle.');
         }
@@ -102,6 +102,14 @@ class Validators
         }
 
         return $entity;
+    }
+
+    public static function validateReservedWord($word)
+    {
+        if(in_array($word, self::getReservedWords())) {
+            throw new \InvalidArgumentException(sprintf('"%s" is a reserved word.', $word));
+        }
+        return $word;
     }
 
     public static function getReservedWords()

@@ -19,7 +19,9 @@ class {{ form_class }} extends AbstractType
         {%- for field in fields %}
 
             ->add('{{ field.name }}','{{ field.type }}', array(
-                'required' => {{ field.required ? 'true' : 'false' }}
+                'required' => {{ field.required ? 'true' : 'false' }},
+                'label' => '{{ field.label }}',
+                'translation_domain' => '{{ field.translation_domain }}'
             ))
 
         {%- endfor %}

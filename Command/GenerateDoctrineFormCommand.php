@@ -40,6 +40,7 @@ class GenerateDoctrineFormCommand extends GenerateDoctrineCommand
                 ->addOption('entity', null, InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)')
                 ->addOption('class', null, InputOption::VALUE_OPTIONAL, 'Class of the new form (without the suffix "Type")')
                 ->addOption('name', null, InputOption::VALUE_OPTIONAL, 'Name of the new form')
+                ->addOption('translation_domain', null, InputOption::VALUE_OPTIONAL, 'Translation domain for the new form')
                 ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'The fields to add to the new form')
                 ->setDescription($this->getCommandDescription())
                 ->setHelp($this->getCommandHelp())
@@ -151,6 +152,9 @@ EOT
         //Form name
         $input->setOption('name', $this->addFormName($input, $output, $dialog));
 
+        //Form name
+        $input->setOption('translation_domain', $this->addTranslationDomain($input, $output, $dialog));
+
         // fields
         $input->setOption('fields', $this->addFields($input, $output, $dialog));
 
@@ -206,8 +210,15 @@ EOT
         $entity = array_pop($parts);
 
         $defaultName = strtolower(str_replace('\\', '_', $bundle->getNamespace()) . ($parts ? '_' : '') . implode('_', $parts) . '_' . $input->getOption('class') . 'type');
-        $formName = $dialog->askAndValidate($output, $dialog->getQuestion('Form name', $defaultName), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateReservedWord'));
+        $formName = $dialog->askAndValidate($output, $dialog->getQuestion('Form name', $defaultName), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateReservedWord'), false, $defaultName);
         return $formName;
+    }
+
+    protected function addTranslationDomain(InputInterface $input, OutputInterface $output, DialogHelper $dialog)
+    {
+        $defaultTranslationDomain = 'messages';
+        $translationDomain = $dialog->askAndValidate($output, $dialog->getQuestion('Translation domain', $defaultTranslationDomain), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateReservedWord'), false, $defaultTranslationDomain);
+        return $translationDomain;
     }
 
     protected function addFields(InputInterface $input, OutputInterface $output, DialogHelper $dialog)
@@ -295,8 +306,13 @@ EOT
             //Field required flag
             $required = $dialog->askConfirmation($output, $dialog->getQuestion('Required', 'yes'), true);
 
-            $data = array('name' => $fieldName, 'type' => $type, 'required' => $required);
-
+            $data = array(
+                'name' => $fieldName,
+                'label' => $this->getLabel($fieldName),
+                'translation_domain' => $input->getOption('translation_domain'),
+                'type' => $type,
+                'required' => $required);
+            
             $fields[$fieldName] = $data;
         }
         return $fields;
@@ -305,6 +321,12 @@ EOT
     protected function createGenerator()
     {
         return new DoctrineFormGenerator($this->getContainer()->get('filesystem'), $this->getContainer()->get('doctrine'));
+    }
+
+    private function getLabel($fieldname)
+    {
+        $strategy = $this->getContainer()->getParameter('undf.generator.label.strategy');
+        return $this->getContainer()->get($strategy)->getLabel($fieldname, 'form', 'label');
     }
 
 }
