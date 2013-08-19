@@ -253,7 +253,7 @@ EOT
     protected function getFormGenerator($bundle = null)
     {
         if (null === $this->formGenerator) {
-            $this->formGenerator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'));
+            $this->formGenerator = new DoctrineFormGenerator($this->getContainer()->get('filesystem'), $this->getContainer()->get('doctrine'));
             $this->formGenerator->setSkeletonDirs($this->getSkeletonDirs($bundle));
         }
 
